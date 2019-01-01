@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>关于k8s的姻亲绑定 - 二麻子 - 够用运维合伙创始人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="ermazi" />
+  <meta name="description" content="kubernetes集群节点众多，我如何将应用部署到合适的节点上呢？ 方法一，可以使用nodeSelector 方法二，可以使用affinity" />
+
+  <meta name="keywords" content="ermazi, 够用运维, 二麻子, linux" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.47.1" />
+
+
+<link rel="canonical" href="https://www.ermazi.com/post/affinity-and-anti-affinity-vs-nodeselector/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+<link href="/dist/even.min.css?v=3.2.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="关于k8s的姻亲绑定" />
+<meta property="og:description" content="kubernetes集群节点众多，我如何将应用部署到合适的节点上呢？ 方法一，可以使用nodeSelector 方法二，可以使用affinity" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.ermazi.com/post/affinity-and-anti-affinity-vs-nodeselector/" /><meta property="article:published_time" content="2018-09-10T23:10:29&#43;08:00"/>
+<meta property="article:modified_time" content="2018-09-10T23:10:29&#43;08:00"/>
+<meta itemprop="name" content="关于k8s的姻亲绑定">
+<meta itemprop="description" content="kubernetes集群节点众多，我如何将应用部署到合适的节点上呢？ 方法一，可以使用nodeSelector 方法二，可以使用affinity">
+
+
+<meta itemprop="datePublished" content="2018-09-10T23:10:29&#43;08:00" />
+<meta itemprop="dateModified" content="2018-09-10T23:10:29&#43;08:00" />
+<meta itemprop="wordCount" content="1548">
+
+
+
+<meta itemprop="keywords" content="kubernetes," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="关于k8s的姻亲绑定"/>
+<meta name="twitter:description" content="kubernetes集群节点众多，我如何将应用部署到合适的节点上呢？ 方法一，可以使用nodeSelector 方法二，可以使用affinity"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">二麻子</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/essay/">
+        <li class="mobile-menu-item">随笔</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">目录</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">二麻子</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/essay/">随笔</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">目录</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">关于k8s的姻亲绑定</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-09-10 </span>
+        
+        <span class="more-meta"> 约 1548 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#名词解释">名词解释</a>
+<ul>
+<li><a href="#节点标签-label">节点标签(label)</a></li>
+<li><a href="#soft和hard">soft和hard</a></li>
+</ul></li>
+<li><a href="#nodeselector方式">nodeSelector方式</a>
+<ul>
+<li><a href="#操作流程">操作流程</a>
+<ul>
+<li><a href="#1-节点打标签">1. 节点打标签</a></li>
+<li><a href="#2-pod选择标签">2. pod选择标签</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#affinity-和-anti-affinity"><code>affinity</code>和<code>anti-affinity</code></a>
+<ul>
+<li><a href="#node-affinity"><code>node affinity</code></a></li>
+<li><a href="#inter-pod-affinity-anti-affinity"><code>inter-pod affinity/anti-affinity</code></a></li>
+<li><a href="#操作流程-1">操作流程</a>
+<ul>
+<li><a href="#1-打标签-同上">1. 打标签（同上）</a></li>
+<li><a href="#2-标签选择">2. 标签选择</a></li>
+</ul></li>
+<li><a href="#举例">举例</a></li>
+<li><a href="#关于-topologykey">关于<code>topologyKey</code></a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    
+
+    
+    <div class="post-content">
+      
+
+<blockquote>
+<p>kubernetes集群节点众多，我如何将应用部署到合适的节点上呢？
+方法一，可以使用<code>nodeSelector</code>
+方法二，可以使用<code>affinity</code>和<code>anti-affinity</code></p>
+</blockquote>
+
+<h2 id="名词解释">名词解释</h2>
+
+<h3 id="节点标签-label">节点标签(label)</h3>
+
+<p>k8s可以给各种资源打标签，然后通过标签进行资源选择，节点也不例外。</p>
+
+<p>内置节点标签：</p>
+
+<ul>
+<li><code>kubernetes.io/hostname</code></li>
+<li><code>failure-domain.beta.kubernetes.io/zone</code></li>
+<li><code>failure-domain.beta.kubernetes.io/region</code></li>
+<li><code>beta.kubernetes.io/instance-type</code></li>
+<li><code>beta.kubernetes.io/os</code></li>
+<li><code>beta.kubernetes.io/arch</code></li>
+<li><code>node-role.kubernetes.io/master</code>  * master独有</li>
+</ul>
+
+<h3 id="soft和hard">soft和hard</h3>
+
+<p>这里代表是否必须满足条件，如果是<code>hard</code>，很强硬，你丫就必须强制满足，否则不给予调度；如果是<code>soft</code>，软软的，优先满足条件，如果实在没办法，那也会勉为其难帮你调度。</p>
+
+<h2 id="nodeselector方式">nodeSelector方式</h2>
+
+<p><code>nodeSelector</code>通过标签选择节点，进行部署，但是这种方式表达单一，而且是<code>hard</code>，一旦条件不满足，就无法调度。</p>
+
+<p>为了防止其他非相关<code>pod</code>调度到特定节点，往往需要和<code>taint</code>以及<code>toleration</code>一起使用。</p>
+
+<h3 id="操作流程">操作流程</h3>
+
+<h4 id="1-节点打标签">1. 节点打标签</h4>
+
+<pre><code class="language-bash">kubectl label nodes &lt;node-name&gt; &lt;label-key&gt;=&lt;label-value&gt;
+</code></pre>
+
+<h4 id="2-pod选择标签">2. pod选择标签</h4>
+
+<pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    env: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+  nodeSelector:
+    group: gateway
+</code></pre>
+
+<h2 id="affinity-和-anti-affinity"><code>affinity</code>和<code>anti-affinity</code></h2>
+
+<p>使用<code>姻亲绑定</code>有以下特点：</p>
+
+<ol>
+<li><p>表达式丰富</p></li>
+
+<li><p>可以设置<code>soft</code>方式，尽力满足，即使不满足也能被调度</p></li>
+
+<li><p>不仅仅能以节点本身信息为条件，而且可以运行在该节点上的<code>pod</code>作为规则，进行调度</p></li>
+</ol>
+
+<p><code>affinity</code>包括两种：<code>node affinity</code>以及<code>inter-pod affinity/anti-affinity</code></p>
+
+<p><code>node affinity</code>类似于<code>nodeSelector</code>，但是拥有上述<code>特点1</code>以及<code>特点2</code>；<code>inter-pod affinity/anti-affinity</code>可以根据运行在节点内部的<code>pod</code>标签制定规则进行匹配。</p>
+
+<p>所以<code>node affinity</code>有取代<code>nodeSelector</code>的意思哟。</p>
+
+<h3 id="node-affinity"><code>node affinity</code></h3>
+
+<p><code>node affinity</code>包括软硬两种，分别对应属性<code>preferredDuringSchedulingIgnoredDuringExecution</code>和<code>requiredDuringSchedulingIgnoredDuringExecution</code>，<code>requiredDuringSchedulingIgnoredDuringExecution</code>就类似于<code>nodeSelector</code>。</p>
+
+<p>&ldquo;IgnoredDuringExecution&rdquo;部分意味着如果pod已经处于执行期间（完成调度），即使节点标签发生变更，也不会影响现有调度结果。</p>
+
+<h3 id="inter-pod-affinity-anti-affinity"><code>inter-pod affinity/anti-affinity</code></h3>
+
+<p><code>inter-pod affinity/anti-affinity</code>可以根据<strong>已经</strong>运行在该节点上的<code>Pod</code>的标签决定该<code>affinity</code>或不该<code>anti-affinity</code>运行在该节点。</p>
+
+<p><strong>注意1：</strong> 引入<code>inter-pod affinity/anti-affinity</code>会影响调度速度，不推荐大规模集群使用</p>
+
+<p><strong>注意2：</strong> <code>anti-affinity</code>需要节点一直被标记，也就是说所有节点必须满足<code>topologyKey</code>，如果不满足，会导致未知异常</p>
+
+<p>标签操作可以是<code>In</code>, <code>NotIn</code>, <code>Exists</code>, <code>DoesNotExist</code>.</p>
+
+<h3 id="操作流程-1">操作流程</h3>
+
+<h4 id="1-打标签-同上">1. 打标签（同上）</h4>
+
+<h4 id="2-标签选择">2. 标签选择</h4>
+
+<pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: sample01
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: failure-domain.beta.kubernetes.io/zone
+            operator: In
+            values:
+            - cn-beijing-a
+            - cn-beijing-b
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: group
+            operator: In
+            values:
+            - gateway
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: security
+            operator: In
+            values:
+            - S1
+        topologyKey: failure-domain.beta.kubernetes.io/zone
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: security
+              operator: In
+              values:
+              - S2
+          topologyKey: kubernetes.io/hostname
+  containers:
+  - name: sample01
+    image: nginx
+</code></pre>
+
+<h3 id="举例">举例</h3>
+
+<p>举例来说，比如安排各种集群的资源，比如zookeeper和kafka，要求zookeeper和kafka运行在特定节点上，但是一个节点不能同时运行两个zookeeper或者kafka。</p>
+
+<pre><code>...
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: failure-domain.beta.kubernetes.io/zone
+              operator: In
+              values:
+                - cn-beijing-a
+                - cn-beijing-b
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: group
+                operator: In
+                values:
+                  - cs
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: &quot;kubernetes.io/hostname&quot;
+          labelSelector:
+            matchLabels:
+              release: zookeeper
+    podAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            topologyKey: &quot;kubernetes.io/hostname&quot;
+            labelSelector:
+              matchLabels:
+                release: kafka
+...
+</code></pre>
+
+<h3 id="关于-topologykey">关于<code>topologyKey</code></h3>
+
+<p>In principle, the <code>topologyKey</code> can be any legal label-key. However, for performance and security reasons, there are some constraints on topologyKey:</p>
+
+<ol>
+<li>For affinity and for <code>requiredDuringSchedulingIgnoredDuringExecution</code> pod anti-affinity, empty <code>topologyKey</code> is not allowed.</li>
+<li>For <code>requiredDuringSchedulingIgnoredDuringExecution</code> pod anti-affinity, the admission controller <code>LimitPodHardAntiAffinityTopology</code> was introduced to limit <code>topologyKey</code> to <code>kubernetes.io/hostname</code>. If you want to make it available for custom topologies, you may modify the admission controller, or simply disable it.</li>
+<li>For <code>preferredDuringSchedulingIgnoredDuringExecution</code> pod anti-affinity, empty <code>topologyKey</code> is interpreted as “all topologies” (“all topologies” here is now limited to the combination of <code>kubernetes.io/hostname</code>, <code>failure-domain.beta.kubernetes.io/zone</code> and <code>failure-domain.beta.kubernetes.io/region</code>).</li>
+<li>Except for the above cases, the <code>topologyKey</code> can be any legal label-key.</li>
+</ol>
+
+    </div>
+
+    
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">ermazi</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2018-09-10</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/kubernetes/">kubernetes</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/proxy-adsl-check-strategy/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">代理池adsl节点检测策略</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/learn-iptables-from-zero/">
+            <span class="next-text nav-default">重拾linux的iptables知识</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:troy.sdu@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/ermazi/" class="iconfont icon-github" title="github"></a>
+  <a href="https://www.ermazi.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://www.ermazi.com">ermazi</a> 强力驱动
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2018 - 
+    1018
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">ermazi</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+<script type="text/javascript" src="/dist/even.min.js?v=3.2.0"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

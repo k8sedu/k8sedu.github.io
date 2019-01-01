@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>k8s的dns组件CoreDNS - 二麻子 - 够用运维合伙创始人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="ermazi" />
+  <meta name="description" content="k8s的长期DNS伴侣都是kube-dns，那个由dnsmasq等三个容器构成的DNS，配置复杂，出故障难排查；而CoreDNS，一款使用G" />
+
+  <meta name="keywords" content="ermazi, 够用运维, 二麻子, linux" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.47.1" />
+
+
+<link rel="canonical" href="https://www.ermazi.com/post/k8s-coredns/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+<link href="/dist/even.min.css?v=3.2.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="k8s的dns组件CoreDNS" />
+<meta property="og:description" content="k8s的长期DNS伴侣都是kube-dns，那个由dnsmasq等三个容器构成的DNS，配置复杂，出故障难排查；而CoreDNS，一款使用G" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.ermazi.com/post/k8s-coredns/" /><meta property="article:published_time" content="2018-09-29T08:10:29&#43;08:00"/>
+<meta property="article:modified_time" content="2018-09-29T08:10:29&#43;08:00"/>
+<meta itemprop="name" content="k8s的dns组件CoreDNS">
+<meta itemprop="description" content="k8s的长期DNS伴侣都是kube-dns，那个由dnsmasq等三个容器构成的DNS，配置复杂，出故障难排查；而CoreDNS，一款使用G">
+
+
+<meta itemprop="datePublished" content="2018-09-29T08:10:29&#43;08:00" />
+<meta itemprop="dateModified" content="2018-09-29T08:10:29&#43;08:00" />
+<meta itemprop="wordCount" content="542">
+
+
+
+<meta itemprop="keywords" content="kubernetes," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="k8s的dns组件CoreDNS"/>
+<meta name="twitter:description" content="k8s的长期DNS伴侣都是kube-dns，那个由dnsmasq等三个容器构成的DNS，配置复杂，出故障难排查；而CoreDNS，一款使用G"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">二麻子</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/essay/">
+        <li class="mobile-menu-item">随笔</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">目录</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">二麻子</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/essay/">随笔</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">目录</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">k8s的dns组件CoreDNS</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-09-29 </span>
+        
+        <span class="more-meta"> 约 542 字 </span>
+        <span class="more-meta"> 预计阅读 2 分钟 </span>
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#coredns特性">CoreDNS特性</a>
+<ul>
+<li><a href="#功能">功能</a></li>
+</ul></li>
+<li><a href="#项目信息">项目信息</a></li>
+<li><a href="#安装方式">安装方式</a></li>
+<li><a href="#插件">插件</a></li>
+<li><a href="#配置文件">配置文件</a>
+<ul>
+<li><a href="#k8s场景">k8s场景</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    
+
+    
+    <div class="post-content">
+      
+
+<blockquote>
+<p>k8s的长期DNS伴侣都是kube-dns，那个由dnsmasq等三个容器构成的DNS，配置复杂，出故障难排查；而CoreDNS，一款使用Go实现的DNS服务，已经逐步取代kube-dns的地位。</p>
+</blockquote>
+
+<h2 id="coredns特性">CoreDNS特性</h2>
+
+<ul>
+<li>超鸡儿简单，单执行文件，简练的配置</li>
+<li>支持各种插件，可插拔，想用啥功能，就配置啥插件</li>
+<li>服务发现，微服务必备</li>
+</ul>
+
+<h3 id="功能">功能</h3>
+
+<ul>
+<li>Serve zone data from a file; both DNSSEC (NSEC only) and DNS are supported (file).</li>
+<li>Retrieve zone data from primaries, i.e., act as a secondary server (AXFR only) (secondary).</li>
+<li>Sign zone data on-the-fly (dnssec).</li>
+<li>Load balancing of responses (loadbalance).</li>
+<li>Allow for zone transfers, i.e., act as a primary server (file).</li>
+<li>Automatically load zone files from disk (auto).</li>
+<li>Caching (cache).</li>
+<li>Use etcd as a backend (replace SkyDNS) (etcd).</li>
+<li>Use k8s (kubernetes) as a backend (kubernetes).</li>
+<li>Serve as a proxy to forward queries to some other (recursive) nameserver (proxy, and forward).</li>
+<li>Provide metrics (by using Prometheus) (metrics).</li>
+<li>Provide query (log) and error (errors) logging.</li>
+<li>Support the CH class: version.bind and friends (chaos).</li>
+<li>Support the RFC 5001 DNS name server identifier (NSID) option (nsid).</li>
+<li>Profiling support (pprof).</li>
+<li>Rewrite queries (qtype, qclass and qname) (rewrite and template).</li>
+</ul>
+
+<h2 id="项目信息">项目信息</h2>
+
+<ul>
+<li>官网：<a href="https://coredns.io/">https://coredns.io/</a></li>
+<li>github：<a href="https://github.com/coredns/coredns">https://github.com/coredns/coredns</a></li>
+<li>docker镜像仓库：<a href="https://hub.docker.com/r/coredns/coredns/">https://hub.docker.com/r/coredns/coredns/</a></li>
+</ul>
+
+<h2 id="安装方式">安装方式</h2>
+
+<ul>
+<li>单文件直接起</li>
+<li>使用docker</li>
+<li>k8s内部使用Deployment</li>
+</ul>
+
+<h2 id="插件">插件</h2>
+
+<ul>
+<li>kubernetes *</li>
+<li>forward *</li>
+<li>proxy</li>
+<li>prometheus *</li>
+<li>errors</li>
+<li>health</li>
+<li>cache</li>
+<li>template *</li>
+</ul>
+
+<p><strong>template插件真是一个超强自定义的插件</strong></p>
+
+<h2 id="配置文件">配置文件</h2>
+
+<h3 id="k8s场景">k8s场景</h3>
+
+<pre><code>.:53 {
+    errors
+    health
+    kubernetes cluster.local. in-addr.arpa ip6.arpa 10.222.0.0/16 {
+        pods insecure
+        upstream 10.40.9.81 10.40.14.6
+        fallthrough in-addr.arpa ip6.arpa
+    }
+    prometheus :9153
+    forward . 10.40.9.81 10.40.14.6
+    cache 30
+}
+</code></pre>
+
+<ul>
+<li>显示错误日志</li>
+<li>支持健康检测</li>
+<li>k8s相关的域名解析</li>
+<li>metrics</li>
+</ul>
+
+    </div>
+
+    
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">ermazi</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2018-09-29</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/kubernetes/">kubernetes</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+        
+          <a class="next" href="/post/k8slab-howto-create-standalone-cluster/">
+            <span class="next-text nav-default">k8s系列——如何创建单节点集群</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:troy.sdu@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/ermazi/" class="iconfont icon-github" title="github"></a>
+  <a href="https://www.ermazi.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://www.ermazi.com">ermazi</a> 强力驱动
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2018 - 
+    1018
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">ermazi</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+<script type="text/javascript" src="/dist/even.min.js?v=3.2.0"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

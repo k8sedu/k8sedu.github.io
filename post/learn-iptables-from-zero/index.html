@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>重拾linux的iptables知识 - 二麻子 - 够用运维合伙创始人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="ermazi" />
+  <meta name="description" content="日常的运维工作中，不需要太高深的网络知识，久而久之，曾经的饭碗已经遗弃，排查一些网络关联的问题，变得很被动。 TCP/IP基础 二层走MAC，三" />
+
+  <meta name="keywords" content="ermazi, 够用运维, 二麻子, linux" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.47.1" />
+
+
+<link rel="canonical" href="https://www.ermazi.com/post/learn-iptables-from-zero/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+<link href="/dist/even.min.css?v=3.2.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="重拾linux的iptables知识" />
+<meta property="og:description" content="日常的运维工作中，不需要太高深的网络知识，久而久之，曾经的饭碗已经遗弃，排查一些网络关联的问题，变得很被动。 TCP/IP基础 二层走MAC，三" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.ermazi.com/post/learn-iptables-from-zero/" /><meta property="article:published_time" content="2018-09-06T01:19:23&#43;08:00"/>
+<meta property="article:modified_time" content="2018-09-06T01:19:23&#43;08:00"/>
+<meta itemprop="name" content="重拾linux的iptables知识">
+<meta itemprop="description" content="日常的运维工作中，不需要太高深的网络知识，久而久之，曾经的饭碗已经遗弃，排查一些网络关联的问题，变得很被动。 TCP/IP基础 二层走MAC，三">
+
+
+<meta itemprop="datePublished" content="2018-09-06T01:19:23&#43;08:00" />
+<meta itemprop="dateModified" content="2018-09-06T01:19:23&#43;08:00" />
+<meta itemprop="wordCount" content="1099">
+
+
+
+<meta itemprop="keywords" content="linux," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="重拾linux的iptables知识"/>
+<meta name="twitter:description" content="日常的运维工作中，不需要太高深的网络知识，久而久之，曾经的饭碗已经遗弃，排查一些网络关联的问题，变得很被动。 TCP/IP基础 二层走MAC，三"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">二麻子</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/essay/">
+        <li class="mobile-menu-item">随笔</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">目录</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">二麻子</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/essay/">随笔</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">目录</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">重拾linux的iptables知识</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-09-06 </span>
+        
+        <span class="more-meta"> 约 1099 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#tcp-ip基础">TCP/IP基础</a></li>
+<li><a href="#iptables">Iptables</a>
+<ul>
+<li><a href="#iptable基础">iptable基础</a></li>
+<li><a href="#iptables常用命令">iptables常用命令</a></li>
+<li><a href="#iptables实战">iptables实战</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    
+
+    
+    <div class="post-content">
+      
+
+<blockquote>
+<p>日常的运维工作中，不需要太高深的网络知识，久而久之，曾经的<code>饭碗</code>已经遗弃，排查一些<code>网络关联</code>的问题，变得很被动。</p>
+</blockquote>
+
+<h2 id="tcp-ip基础">TCP/IP基础</h2>
+
+<p>二层走<code>MAC</code>，三层走<code>路由</code>。</p>
+
+<p>TCP/IP参考模型：</p>
+
+<p><img src="https://wekube.com/imgs/20180906013733.png" alt="TCP/IP协议模型" /></p>
+
+<p>报文封装：</p>
+
+<p><img src="https://wekube.com/imgs/20180906013911.png" alt="报文封装" /></p>
+
+<p>一些术语：</p>
+
+<ul>
+<li>snat</li>
+<li>dnat</li>
+<li>proxy-arp</li>
+</ul>
+
+<h2 id="iptables">Iptables</h2>
+
+<h3 id="iptable基础">iptable基础</h3>
+
+<p><code>iptables</code>用于<code>*nux</code>系统中的<code>网络流量管理</code>，<code>iptables</code>由几个<code>部分</code>组成：</p>
+
+<pre><code>iptables &gt; tables &gt; chains &gt; rules
+</code></pre>
+
+<p><img src="https://wekube.com/imgs/20180906014721.png" alt="iptables各个名词的关系" /></p>
+
+<p><code>iptables</code>是管理配置工具，它可以管理<code>iptables</code>相关的资源，<code>table</code>饱含<code>chain</code>，<code>chain</code>饱含<code>rule</code>。</p>
+
+<p>镇楼图：</p>
+
+<p><img src="https://wekube.com/imgs/20180906023257.png" alt="包流转流程图" /></p>
+
+<p><code>iptables</code>饱含5个内置<code>tables</code>：</p>
+
+<p><img src="https://wekube.com/imgs/20180906015307.png" alt="五个内置tables" /></p>
+
+<p>我们常用的是其中三个<code>nat</code>表、<code>filter</code>表以及<code>mangle</code>表，（这里我翻一下吧，以图片英文）</p>
+
+<table>
+<thead>
+<tr>
+<th>表</th>
+<th>使用场景</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>filter</td>
+<td>最常用的流量过滤，比如接受、拒绝、丢弃等</td>
+</tr>
+
+<tr>
+<td>nat</td>
+<td>用于网络地址转换，比如snat、dnat等</td>
+</tr>
+
+<tr>
+<td>mangle</td>
+<td>该表可以修改包，比如ttl,mss等</td>
+</tr>
+</tbody>
+</table>
+
+<p><code>iptables</code>还有5条内置的<code>chains</code>：</p>
+
+<ul>
+<li><strong>INPUT CHAIN</strong>: 用于配置<code>流量/包</code>进入服务器的规则</li>
+<li><strong>OUTPUT CHAIN:</strong> 用于配置<code>流量/包</code>从服务器出去的规则</li>
+<li><strong>FORWARD CHAIN:</strong> 用于<code>IP包</code>转发</li>
+<li><strong>PRE-ROUTING CHAIN:</strong> 用于配置<strong>在内核进行路由决策之前</strong>对<code>包</code>的一些操作，比如<code>DNAT</code></li>
+<li><strong>POST-ROUTING CHAIN:</strong> 用于配置<strong>在内核进行路由决策之后</strong>对<code>包</code>的一些操作，比如<code>SNAT</code></li>
+</ul>
+
+<p><strong><code>表</code>决定作用，<code>链</code>决定位置</strong></p>
+
+<p>所以不是所有的表都有这五个链，如下图：</p>
+
+<p><img src="https://wekube.com/imgs/20180906021406.png" alt="常用表包含的链" />、</p>
+
+<p>除了内置的<code>链</code>，我们还可以自定义<code>链</code>，比如我们按照功能区分<code>链</code>，比如链<code>BLACKLIST</code>用于封刷我网站的IP的，而链<code>RATELIMITED</code>用于限速等等。</p>
+
+<h3 id="iptables常用命令">iptables常用命令</h3>
+
+<ol>
+<li>查看某表所有的<code>链</code>和<code>规则</code></li>
+</ol>
+
+<pre><code class="language-bash">iptables -t &lt;table-name&gt; -L -v
+</code></pre>
+
+<ol>
+<li>添加<code>规则</code>到某<code>表</code>的某<code>链</code></li>
+</ol>
+
+<pre><code class="language-bash">iptables -t &lt;table-name&gt; -A &lt;chain-name&gt; -d &lt;destination-address&gt; -p &lt;protocol&gt; -j &lt;action&gt;
+</code></pre>
+
+<ol>
+<li>删除某<code>表</code>某<code>链</code>的某<code>规则</code></li>
+</ol>
+
+<pre><code class="language-bash"># 使用ID删除
+iptables -D INPUT 1 -t filter
+# 使用具体规则删除
+iptables -D INPUT -s x.x.x.x -p tcp -j DROP -t filter
+</code></pre>
+
+<ol>
+<li>清空某表的所有规则</li>
+</ol>
+
+<pre><code class="language-bash">iptables -t &lt;table-name&gt; -F
+</code></pre>
+
+<ol>
+<li>创建/删除用户定义的新<code>链</code></li>
+</ol>
+
+<pre><code class="language-bash">iptables -t &lt;table-name&gt; -N &lt;chain-name&gt;
+iptables -t &lt;table-name&gt; -X &lt;chain-name&gt;
+</code></pre>
+
+<p><strong>注意：如果不指定表，默认为<code>filter表</code></strong></p>
+
+<h3 id="iptables实战">iptables实战</h3>
+
+<ol>
+<li>封ip</li>
+</ol>
+
+<pre><code class="language-bash">iptables -A INPUT -s 1.1.1.1 -d 2.2.2.2 -j REJECTED
+</code></pre>
+
+<ol>
+<li>封ip的某端口</li>
+</ol>
+
+<pre><code class="language-bash">iptables -A INPUT -p tcp --dport 22 -m iprange --src-range 1.1.1.100-1.1.1.200 -j REJECT
+iptables -A INPUT -p tcp --dport 22 -s 192.168.100.0/24 -j REJECT
+</code></pre>
+
+<ol>
+<li>使用自定义链</li>
+</ol>
+
+<pre><code># 新建
+iptables -N BLACKLIST -t filter
+# 规则
+iptables -A INPUT -t filter -s 1.1.1.1 -d 2.2.2.2 -j REJECTED
+iptables -A INPUT -t filter -s 3.3.3.3 -d 2.2.2.2 -j REJECTED
+# 让流量进来都去BLACKLIST链
+iptables -A INPUT -t filter -j BLACKLIST
+# 查看数据啥的
+iptables -t filter -L -v
+</code></pre>
+
+<p>比如：</p>
+
+<pre><code>root@lab:~# iptables -t filter -L -v
+Chain INPUT (policy ACCEPT 201 packets, 33436 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+  200 33384 BLACKLIST  all  --  any    any     anywhere             anywhere
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+
+Chain OUTPUT (policy ACCEPT 180 packets, 30063 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+
+Chain BLACKLIST (1 references)
+ pkts bytes target     prot opt in     out     source               destination
+</code></pre>
+
+<p>这样所有进来的流量都会去链<code>BLACKLIST</code>走一遭。</p>
+
+<ol>
+<li>设定snat，地址伪装，局域网上网</li>
+</ol>
+
+<pre><code class="language-bash"># 通用
+iptables -t nat -A POSTROUTING -s 192.168.2.0/24 -o eth0 -j MASQUERADE
+# 在出口ip固定的时候可以用，对于ADSL这种场景，使用MASQUERADE
+iptables -t nat -A POSTROUTING -s 192.168.2.0/24 -o eth0 -j SNAT --to-source 2.2.2.2
+</code></pre>
+
+<ol>
+<li>设定dnat，将服务暴露公网</li>
+</ol>
+
+<pre><code class="language-bash">iptables -t nat -A PREROUTING -d 2.2.2.2 -p tcp --dport 2222  -j DNAT --to-destination 192.168.2.2:22
+</code></pre>
+
+<ol>
+<li>禁ping</li>
+</ol>
+
+<pre><code class="language-bash">iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
+</code></pre>
+
+    </div>
+
+    
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">ermazi</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2018-09-06</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/linux/">linux</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/affinity-and-anti-affinity-vs-nodeselector/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">关于k8s的姻亲绑定</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/play-with-ozzo-dbx/">
+            <span class="next-text nav-default">玩转ozzo全家桶</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:troy.sdu@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/ermazi/" class="iconfont icon-github" title="github"></a>
+  <a href="https://www.ermazi.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://www.ermazi.com">ermazi</a> 强力驱动
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2018 - 
+    1018
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">ermazi</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+<script type="text/javascript" src="/dist/even.min.js?v=3.2.0"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

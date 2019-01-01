@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>阿里云之负载均衡SLB - 二麻子 - 够用运维合伙创始人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="ermazi" />
+  <meta name="description" content="阿里云SLB支持四层以及七层负载均衡，其中四层使用LVS实现，七层使用Tengine实现， 所以谈SLB也会四层和七层分开吹。 惯例，上全局图：" />
+
+  <meta name="keywords" content="ermazi, 够用运维, 二麻子, linux" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.47.1" />
+
+
+<link rel="canonical" href="https://www.ermazi.com/post/ali-bp-slb-s01/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+<link href="/dist/even.min.css?v=3.2.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="阿里云之负载均衡SLB" />
+<meta property="og:description" content="阿里云SLB支持四层以及七层负载均衡，其中四层使用LVS实现，七层使用Tengine实现， 所以谈SLB也会四层和七层分开吹。 惯例，上全局图：" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.ermazi.com/post/ali-bp-slb-s01/" /><meta property="article:published_time" content="2018-09-27T13:28:57&#43;08:00"/>
+<meta property="article:modified_time" content="2018-09-27T13:28:57&#43;08:00"/>
+<meta itemprop="name" content="阿里云之负载均衡SLB">
+<meta itemprop="description" content="阿里云SLB支持四层以及七层负载均衡，其中四层使用LVS实现，七层使用Tengine实现， 所以谈SLB也会四层和七层分开吹。 惯例，上全局图：">
+
+
+<meta itemprop="datePublished" content="2018-09-27T13:28:57&#43;08:00" />
+<meta itemprop="dateModified" content="2018-09-27T13:28:57&#43;08:00" />
+<meta itemprop="wordCount" content="1622">
+
+
+
+<meta itemprop="keywords" content="linux,aliyun," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="阿里云之负载均衡SLB"/>
+<meta name="twitter:description" content="阿里云SLB支持四层以及七层负载均衡，其中四层使用LVS实现，七层使用Tengine实现， 所以谈SLB也会四层和七层分开吹。 惯例，上全局图："/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">二麻子</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/essay/">
+        <li class="mobile-menu-item">随笔</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">目录</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">二麻子</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/essay/">随笔</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">目录</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">阿里云之负载均衡SLB</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-09-27 </span>
+        
+        <span class="more-meta"> 约 1622 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#名词解释">名词解释</a></li>
+<li><a href="#官方文档摘要">官方文档摘要</a>
+<ul>
+<li><a href="#四层负载均衡">四层负载均衡</a></li>
+<li><a href="#七层负载均衡">七层负载均衡</a></li>
+<li><a href="#应用场景">应用场景</a></li>
+</ul></li>
+<li><a href="#q-a">Q&amp;A</a>
+<ul>
+<li><a href="#1-如何获取客户端真实ip">1. 如何获取客户端真实IP</a></li>
+<li><a href="#2-阿里云负载均衡会话保持方式">2. 阿里云负载均衡会话保持方式</a></li>
+<li><a href="#3-关于阿里云负载均衡的超时问题">3. 关于阿里云负载均衡的超时问题</a></li>
+<li><a href="#4-为啥阿里云负载均衡使用rst来断开连接-而不是走寻常tcp挥手">4. 为啥阿里云负载均衡使用RST来断开连接，而不是走寻常tcp挥手</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    
+
+    
+    <div class="post-content">
+      
+
+<blockquote>
+<p>阿里云SLB支持四层以及七层负载均衡，其中四层使用LVS实现，七层使用Tengine实现，
+所以谈SLB也会四层和七层分开吹。</p>
+</blockquote>
+
+<p>惯例，上全局图：</p>
+
+<p><img src="https://wekube.com/imgs/20180927133421.png" alt="负载均衡全局图" /></p>
+
+<h2 id="名词解释">名词解释</h2>
+
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>解释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>七层&amp;四层</td>
+<td>负载均衡支持代理的协议，四层传输层，更加底层，支持tcp&amp;udp，自然也就支持所有tcp/udp应用的代理；而七层与应用相关，这里既然是使用Tengine，主要支持http协议代理。</td>
+</tr>
+
+<tr>
+<td>调度算法</td>
+<td>后抛请求时依据链路状态节点信息所做的调度决策，阿里负载均衡支持轮询、加权轮询（WRR）、加权最小连接数（WLC）和一致性哈希（CH）调度算法。</td>
+</tr>
+
+<tr>
+<td>健康检查</td>
+<td>检测后端节点的运行状态，此检查为主动检查。</td>
+</tr>
+
+<tr>
+<td>会话保持</td>
+<td><code>在会话的生命周期内，可以将同一客户端的请求转发到同一台后端服务器上。</code>这里的会话周期是指会话超时，最大3600s；对于四层会话保持方式单一；对于七层会话保持方式多样。</td>
+</tr>
+
+<tr>
+<td>访问控制</td>
+<td>黑白名单IP限制</td>
+</tr>
+
+<tr>
+<td>高可用</td>
+<td>挂了部分没事，对外服务继续；负载均衡本身高可用以及后端应用高可用</td>
+</tr>
+
+<tr>
+<td>SNI支持</td>
+<td>多证书支持，根据域名选择证书</td>
+</tr>
+
+<tr>
+<td>http/2 &amp; ws/wss支持</td>
+<td>支持websocket以及http2协议</td>
+</tr>
+
+<tr>
+<td>实例规格</td>
+<td>分两类：性能保障性以及共享型。<br />共享型：不隔离资源，你丫因为资源争用导致业务不问题，别找我，我tm已经告诉你是共享的了。<br />性能保障性：付多少钱，用多少的性能规格，为了你的业务，你最好买最贵的。</td>
+</tr>
+
+<tr>
+<td>性能指标</td>
+<td>1. 最大连接数；2. 每秒新建连接数CPS[四层]；3. 每秒钟查询数QPS[七层]</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="官方文档摘要">官方文档摘要</h2>
+
+<h3 id="四层负载均衡">四层负载均衡</h3>
+
+<p><img src="https://wekube.com/imgs/20180927134133.png" alt="lvs fullnat模式" /></p>
+
+<p>按官网文档所述，用的是<code>lvs</code>的<code>fullnat模式</code>。</p>
+
+<p><strong>原文：</strong></p>
+
+<blockquote>
+<p>LVS集群内的每台LVS都会进行会话，通过组播报文同步到该集群内的其它LVS机器上，从而实现LVS集群内各台机器间的会话同步。如下图所示，当客户端向服务端传输三个数据包后，在LVS1上建立的会话A开始同步到其它LVS机器上。图中实线表示现有的连接，图中虚线表示当LVS1出现故障或进行维护时，这部分流量会走到一台可以正常运行的机器LVS2上。因而负载均衡集群支持热升级，并且在机器故障和集群维护时最大程度对用户透明，不影响用户业务。</p>
+</blockquote>
+
+<p>划重点：
+- lvs节点会话同步（三数据包触发）
+- 故障会故障切换</p>
+
+<p><em>注意：对于连接未建立（三次握手未完成），或者已建立连接但未触发会话同步机制，热升级不保证连接不中断，需要依靠客户端重新发起连接。</em></p>
+
+<h3 id="七层负载均衡">七层负载均衡</h3>
+
+<p>Tengine，当成nginx看就好了。</p>
+
+<h3 id="应用场景">应用场景</h3>
+
+<p>利用<code>负载均衡+多节点横向扩展</code>可以解决高访问量问题；利用<code>负载均衡本身的高可用</code>可以解决单点问题；利用<code>负载均衡提供的健康监测</code>可以解决后端单点的问题</p>
+
+<p>特性：
+- 并发高
+- 横向扩展
+- 高可用
+- 支持多可用区
+- 利用dns支持跨区域容灾</p>
+
+<p><em>吐槽：好多吹的特性跟SLB本身没啥关系，就看怎么用了。</em></p>
+
+<h2 id="q-a">Q&amp;A</h2>
+
+<h3 id="1-如何获取客户端真实ip">1. 如何获取客户端真实IP</h3>
+
+<p>对于四层，后端RS直接获取真实IP，（额，应该是有内核更改，不然按照fullnat模式，不能获取客户端的真实IP）
+对于七层，会使用<code>X-Forwareded-For</code>存放真实IP，但这是个列表，其中第一个是用户的真实IP；如果想&rdquo;去除&rdquo;SLB这层，那么就需要参数配置，使用<code>X-Forwarded-For</code>的IP替换remote_addr：
+对于nginx来说：</p>
+
+<pre><code>set_real_ip_from 100.64.0.0/10;
+real_ip_header X-Forwarded-For;
+</code></pre>
+
+<p><code>100.64.0.0/10</code>为阿里云保留地址</p>
+
+<h3 id="2-阿里云负载均衡会话保持方式">2. 阿里云负载均衡会话保持方式</h3>
+
+<p>对于四层，是根据源IP进行会话保持；对于七层，使用的是cookie进行会话保持，所以需要后端RS节点支持set-cookie</p>
+
+<h3 id="3-关于阿里云负载均衡的超时问题">3. 关于阿里云负载均衡的超时问题</h3>
+
+<p>对于四层，有一个连接超时，该超时最大900秒，当且仅当会话空闲900秒时，负载均衡会给双方发送rst信号中断连接，对于一些特殊用途，比如作业平台，sql查询等，发工单问过阿里云能否单独修改，回复是<strong>不！支！持！</strong></p>
+
+<h3 id="4-为啥阿里云负载均衡使用rst来断开连接-而不是走寻常tcp挥手">4. 为啥阿里云负载均衡使用RST来断开连接，而不是走寻常tcp挥手</h3>
+
+<p>寻常挥手得走好多流程，交互过多；而RST迅猛快捷。</p>
+
+<p><strong>但是如果应用不能很好地处理RST信号，那么会出问题哟</strong></p>
+
+    </div>
+
+    
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">ermazi</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2018-09-27</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/linux/">linux</a>
+          
+          <a href="/tags/aliyun/">aliyun</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/k8slab-howto-create-standalone-cluster/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">k8s系列——如何创建单节点集群</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/proxy-adsl-check-strategy/">
+            <span class="next-text nav-default">代理池adsl节点检测策略</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:troy.sdu@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/ermazi/" class="iconfont icon-github" title="github"></a>
+  <a href="https://www.ermazi.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://www.ermazi.com">ermazi</a> 强力驱动
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2018 - 
+    1018
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">ermazi</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+<script type="text/javascript" src="/dist/even.min.js?v=3.2.0"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kubernetes on 二麻子 - 够用运维合伙创始人</title>
+    <link>https://www.ermazi.com/tags/kubernetes/</link>
+    <description>Recent content in Kubernetes on 二麻子 - 够用运维合伙创始人</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 29 Sep 2018 08:10:29 +0800</lastBuildDate>
+    
+	<atom:link href="https://www.ermazi.com/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>k8s的dns组件CoreDNS</title>
+      <link>https://www.ermazi.com/post/k8s-coredns/</link>
+      <pubDate>Sat, 29 Sep 2018 08:10:29 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/k8s-coredns/</guid>
+      <description>k8s的长期DNS伴侣都是kube-dns，那个由dnsmasq等三个容器构成的DNS，配置复杂，出故障难排查；而CoreDNS，一款使用G</description>
+    </item>
+    
+    <item>
+      <title>k8s系列——如何创建单节点集群</title>
+      <link>https://www.ermazi.com/post/k8slab-howto-create-standalone-cluster/</link>
+      <pubDate>Fri, 28 Sep 2018 00:00:38 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/k8slab-howto-create-standalone-cluster/</guid>
+      <description>sometimes，我们只是想测试一下k8s的功能，进行流程验证，minikube与真实k8s集群还是有一定区别的，这时候我们可以使用快速起</description>
+    </item>
+    
+    <item>
+      <title>关于k8s的姻亲绑定</title>
+      <link>https://www.ermazi.com/post/affinity-and-anti-affinity-vs-nodeselector/</link>
+      <pubDate>Mon, 10 Sep 2018 23:10:29 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/affinity-and-anti-affinity-vs-nodeselector/</guid>
+      <description>kubernetes集群节点众多，我如何将应用部署到合适的节点上呢？ 方法一，可以使用nodeSelector 方法二，可以使用affinity</description>
+    </item>
+    
+    <item>
+      <title>使用openvpn搭建kubernetes本地调试桥梁</title>
+      <link>https://www.ermazi.com/post/use-openvpn-connect-local-and-kubernetes-for-app-debugging/</link>
+      <pubDate>Mon, 03 Sep 2018 17:34:11 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/use-openvpn-connect-local-and-kubernetes-for-app-debugging/</guid>
+      <description>来自于kubernetes的外部调试需求，对于微服务架构，本地程序的调试强依赖于注册中心以及直连生产者消费者，之前考虑使用teleprese</description>
+    </item>
+    
+    <item>
+      <title>k8s不完全指北之本地开发辅助工具telepresence</title>
+      <link>https://www.ermazi.com/post/how-to-build-local-develop-env-via-telepresence/</link>
+      <pubDate>Fri, 31 Aug 2018 14:48:55 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/how-to-build-local-develop-env-via-telepresence/</guid>
+      <description>大开发：&amp;rdquo;嘿，小运维~，帮忙把kubernetes的服务IP以及POD的IP暴露出来，我本地需要访问。&amp;rdquo; 小运维：&amp;r</description>
+    </item>
+    
+    <item>
+      <title>如何调研k8s日志组件</title>
+      <link>https://www.ermazi.com/post/how-to-research-k8s-log-component/</link>
+      <pubDate>Thu, 30 Aug 2018 23:10:29 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/how-to-research-k8s-log-component/</guid>
+      <description>欧，天哪，如何才能将k8s的日志优雅地展示给开发者们呢？ 从收集到解析再到存储最后展示，日志搜集大致这个流程。 收集会以event作为单位，在不</description>
+    </item>
+    
+    <item>
+      <title>k8s网络初窥</title>
+      <link>https://www.ermazi.com/post/k8s-network/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.ermazi.com/post/k8s-network/</guid>
+      <description>神奇的kubernetes，网络也是它的魅力之一，它拥有一个真实存在的Pod子网，它还抽象出一个虚拟存在的服务子网。 当你访问任何一个节点的N</description>
+    </item>
+    
+  </channel>
+</rss>

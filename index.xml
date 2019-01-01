@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>二麻子 - 够用运维合伙创始人</title>
+    <link>https://www.ermazi.com/</link>
+    <description>Recent content on 二麻子 - 够用运维合伙创始人</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 29 Sep 2018 08:10:29 +0800</lastBuildDate>
+    
+	<atom:link href="https://www.ermazi.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>k8s的dns组件CoreDNS</title>
+      <link>https://www.ermazi.com/post/k8s-coredns/</link>
+      <pubDate>Sat, 29 Sep 2018 08:10:29 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/k8s-coredns/</guid>
+      <description>k8s的长期DNS伴侣都是kube-dns，那个由dnsmasq等三个容器构成的DNS，配置复杂，出故障难排查；而CoreDNS，一款使用G</description>
+    </item>
+    
+    <item>
+      <title>k8s系列——如何创建单节点集群</title>
+      <link>https://www.ermazi.com/post/k8slab-howto-create-standalone-cluster/</link>
+      <pubDate>Fri, 28 Sep 2018 00:00:38 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/k8slab-howto-create-standalone-cluster/</guid>
+      <description>sometimes，我们只是想测试一下k8s的功能，进行流程验证，minikube与真实k8s集群还是有一定区别的，这时候我们可以使用快速起</description>
+    </item>
+    
+    <item>
+      <title>阿里云之负载均衡SLB</title>
+      <link>https://www.ermazi.com/post/ali-bp-slb-s01/</link>
+      <pubDate>Thu, 27 Sep 2018 13:28:57 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/ali-bp-slb-s01/</guid>
+      <description>阿里云SLB支持四层以及七层负载均衡，其中四层使用LVS实现，七层使用Tengine实现， 所以谈SLB也会四层和七层分开吹。 惯例，上全局图：</description>
+    </item>
+    
+    <item>
+      <title>代理池adsl节点检测策略</title>
+      <link>https://www.ermazi.com/post/proxy-adsl-check-strategy/</link>
+      <pubDate>Fri, 14 Sep 2018 02:13:08 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/proxy-adsl-check-strategy/</guid>
+      <description>爬虫必备代理池，是有一大堆adsl机器组成，对于这些机器的维护，自然也就成为工作中重要的一环 adsl节点特点 ssh访问端点固定 adsl拨号 资</description>
+    </item>
+    
+    <item>
+      <title>关于k8s的姻亲绑定</title>
+      <link>https://www.ermazi.com/post/affinity-and-anti-affinity-vs-nodeselector/</link>
+      <pubDate>Mon, 10 Sep 2018 23:10:29 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/affinity-and-anti-affinity-vs-nodeselector/</guid>
+      <description>kubernetes集群节点众多，我如何将应用部署到合适的节点上呢？ 方法一，可以使用nodeSelector 方法二，可以使用affinity</description>
+    </item>
+    
+    <item>
+      <title>重拾linux的iptables知识</title>
+      <link>https://www.ermazi.com/post/learn-iptables-from-zero/</link>
+      <pubDate>Thu, 06 Sep 2018 01:19:23 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/learn-iptables-from-zero/</guid>
+      <description>日常的运维工作中，不需要太高深的网络知识，久而久之，曾经的饭碗已经遗弃，排查一些网络关联的问题，变得很被动。 TCP/IP基础 二层走MAC，三</description>
+    </item>
+    
+    <item>
+      <title>坠车事件</title>
+      <link>https://www.ermazi.com/essay/fall-from-my-bicycle/</link>
+      <pubDate>Thu, 06 Sep 2018 00:56:14 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/essay/fall-from-my-bicycle/</guid>
+      <description>早起骑车上班，车速20km/h，拐弯处，后刹不灵，前刹抱死，人仰“车”翻。 折损情况： 器件 人 右手手背三处擦伤，右手手腕10cm裂痕（浅），右手</description>
+    </item>
+    
+    <item>
+      <title>玩转ozzo全家桶</title>
+      <link>https://www.ermazi.com/post/play-with-ozzo-dbx/</link>
+      <pubDate>Tue, 04 Sep 2018 23:10:29 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/play-with-ozzo-dbx/</guid>
+      <description>Q: 使用MySQL遇到Internal server error: sql: Scan error on column index 6: unsupported Scan, storing driver.Value type []uint8 into type *time.Time的问题 A：查看issue,DSN添加参数parse</description>
+    </item>
+    
+    <item>
+      <title>一步步入坑go-restful</title>
+      <link>https://www.ermazi.com/post/web-from-zero-to-one/</link>
+      <pubDate>Mon, 03 Sep 2018 18:22:59 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/web-from-zero-to-one/</guid>
+      <description>一步步了解go的http封装 go语言本身http库已经可以很方便的完成很多web需求，如果只是简单的几个接口，几乎不怎么需要额外的框架；当项</description>
+    </item>
+    
+    <item>
+      <title>使用openvpn搭建kubernetes本地调试桥梁</title>
+      <link>https://www.ermazi.com/post/use-openvpn-connect-local-and-kubernetes-for-app-debugging/</link>
+      <pubDate>Mon, 03 Sep 2018 17:34:11 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/use-openvpn-connect-local-and-kubernetes-for-app-debugging/</guid>
+      <description>来自于kubernetes的外部调试需求，对于微服务架构，本地程序的调试强依赖于注册中心以及直连生产者消费者，之前考虑使用teleprese</description>
+    </item>
+    
+    <item>
+      <title>k8s不完全指北之本地开发辅助工具telepresence</title>
+      <link>https://www.ermazi.com/post/how-to-build-local-develop-env-via-telepresence/</link>
+      <pubDate>Fri, 31 Aug 2018 14:48:55 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/how-to-build-local-develop-env-via-telepresence/</guid>
+      <description>大开发：&amp;rdquo;嘿，小运维~，帮忙把kubernetes的服务IP以及POD的IP暴露出来，我本地需要访问。&amp;rdquo; 小运维：&amp;r</description>
+    </item>
+    
+    <item>
+      <title>如何调研k8s日志组件</title>
+      <link>https://www.ermazi.com/post/how-to-research-k8s-log-component/</link>
+      <pubDate>Thu, 30 Aug 2018 23:10:29 +0800</pubDate>
+      
+      <guid>https://www.ermazi.com/post/how-to-research-k8s-log-component/</guid>
+      <description>欧，天哪，如何才能将k8s的日志优雅地展示给开发者们呢？ 从收集到解析再到存储最后展示，日志搜集大致这个流程。 收集会以event作为单位，在不</description>
+    </item>
+    
+    <item>
+      <title>k8s网络初窥</title>
+      <link>https://www.ermazi.com/post/k8s-network/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.ermazi.com/post/k8s-network/</guid>
+      <description>神奇的kubernetes，网络也是它的魅力之一，它拥有一个真实存在的Pod子网，它还抽象出一个虚拟存在的服务子网。 当你访问任何一个节点的N</description>
+    </item>
+    
+  </channel>
+</rss>

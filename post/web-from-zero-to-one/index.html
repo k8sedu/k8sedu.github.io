@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>一步步入坑go-restful - 二麻子 - 够用运维合伙创始人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="ermazi" />
+  <meta name="description" content="一步步了解go的http封装 go语言本身http库已经可以很方便的完成很多web需求，如果只是简单的几个接口，几乎不怎么需要额外的框架；当项" />
+
+  <meta name="keywords" content="ermazi, 够用运维, 二麻子, linux" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.47.1" />
+
+
+<link rel="canonical" href="https://www.ermazi.com/post/web-from-zero-to-one/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+<link href="/dist/even.min.css?v=3.2.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="一步步入坑go-restful" />
+<meta property="og:description" content="一步步了解go的http封装 go语言本身http库已经可以很方便的完成很多web需求，如果只是简单的几个接口，几乎不怎么需要额外的框架；当项" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.ermazi.com/post/web-from-zero-to-one/" /><meta property="article:published_time" content="2018-09-03T18:22:59&#43;08:00"/>
+<meta property="article:modified_time" content="2018-09-03T18:22:59&#43;08:00"/>
+<meta itemprop="name" content="一步步入坑go-restful">
+<meta itemprop="description" content="一步步了解go的http封装 go语言本身http库已经可以很方便的完成很多web需求，如果只是简单的几个接口，几乎不怎么需要额外的框架；当项">
+
+
+<meta itemprop="datePublished" content="2018-09-03T18:22:59&#43;08:00" />
+<meta itemprop="dateModified" content="2018-09-03T18:22:59&#43;08:00" />
+<meta itemprop="wordCount" content="1348">
+
+
+
+<meta itemprop="keywords" content="go," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="一步步入坑go-restful"/>
+<meta name="twitter:description" content="一步步了解go的http封装 go语言本身http库已经可以很方便的完成很多web需求，如果只是简单的几个接口，几乎不怎么需要额外的框架；当项"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">二麻子</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/essay/">
+        <li class="mobile-menu-item">随笔</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">目录</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">二麻子</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/essay/">随笔</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">目录</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">一步步入坑go-restful</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-09-03 </span>
+        
+        <span class="more-meta"> 约 1348 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-使用handlerfunc">1. 使用HandlerFunc</a></li>
+<li><a href="#2-使用handler">2. 使用handler</a></li>
+<li><a href="#3-使用mux统一管理handler">3. 使用mux统一管理handler</a></li>
+<li><a href="#分析go-restful官方例子userresource">分析go-restful官方例子UserResource</a></li>
+<li><a href="#分析官方例子自定义日志格式">分析官方例子自定义日志格式</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    
+
+    
+    <div class="post-content">
+      
+
+<blockquote>
+<p>一步步了解go的http封装</p>
+
+<p>go语言本身http库已经可以很方便的完成很多web需求，如果只是简单的几个接口，几乎不怎么需要额外的框架；当项目大了，或者路由变多了，那么可以引入框架，比如gin，beego，go-restful等</p>
+
+<p>这里主要介绍go-restful，支持openapi文档，封装简单，前后端分离写restful接口专用。</p>
+</blockquote>
+
+<h4 id="1-使用handlerfunc">1. 使用HandlerFunc</h4>
+
+<pre><code class="language-go">package main
+
+import (
+	&quot;net/http&quot;
+	&quot;io&quot;
+	&quot;log&quot;
+)
+
+func HelloHandleFunc(w http.ResponseWriter, req * http.Request)  {
+	io.WriteString(w, &quot;welcome to ermazi.com!&quot;)
+}
+
+func main()  {
+	http.HandleFunc(&quot;/hi/&quot;, HelloHandleFunc )
+
+	if err := http.ListenAndServe(&quot;:8080&quot;, nil); err != nil {
+		log.Fatal(&quot;ListenAndServe: &quot;, err)
+	}
+}
+</code></pre>
+
+<h4 id="2-使用handler">2. 使用handler</h4>
+
+<pre><code class="language-go">package main
+
+import (
+	&quot;net/http&quot;
+	&quot;io&quot;
+	&quot;log&quot;
+)
+
+type HelloHandler struct {}
+
+func (hh *HelloHandler)ServeHTTP(w http.ResponseWriter, req * http.Request)  {
+	path := req.URL.String()
+	io.WriteString(w, &quot;welcome to ermazi.com! your path is &quot; + path)
+}
+
+func main()  {
+	if err := http.ListenAndServe(&quot;:8080&quot;, &amp;HelloHandler{}); err != nil {
+		log.Fatal(&quot;ListenAndServe: &quot;, err)
+	}
+}
+</code></pre>
+
+<p>结构体对象，实现<code>ServerHttp</code>方法，就可以作为<code>handler</code>，传入即可。</p>
+
+<pre><code>➜ http http://localhost:8080/hi
+HTTP/1.1 200 OK
+Content-Length: 39
+Content-Type: text/plain; charset=utf-8
+Date: Mon, 03 Sep 2018 10:37:45 GMT
+
+welcome to ermazi.com! your path is /hi
+</code></pre>
+
+<h4 id="3-使用mux统一管理handler">3. 使用mux统一管理handler</h4>
+
+<pre><code class="language-go">package main
+
+import (
+	&quot;net/http&quot;
+	&quot;io&quot;
+	&quot;log&quot;
+)
+
+
+func main()  {
+	mux := http.NewServeMux()
+	mux.HandleFunc(&quot;/hi/&quot;, func(w http.ResponseWriter, req *http.Request) {
+		io.WriteString(w, &quot;hi\n&quot;)
+	})
+	mux.HandleFunc(&quot;/haha/&quot;, func(w http.ResponseWriter, req *http.Request) {
+		io.WriteString(w, &quot;haha\n&quot;)
+	})
+	mux.HandleFunc(&quot;/hehe/&quot;, func(w http.ResponseWriter, req *http.Request) {
+		io.WriteString(w, &quot;hehe\n&quot;)
+	})
+	if err := http.ListenAndServe(&quot;:8080&quot;, mux); err != nil {
+		log.Fatal(&quot;ListenAndServe: &quot;, err)
+	}
+}
+</code></pre>
+
+<p>使用<code>mux</code>统一管理路由。</p>
+
+<pre><code>➜  ~ http http://localhost:8080/hi/
+HTTP/1.1 200 OK
+Content-Length: 3
+Content-Type: text/plain; charset=utf-8
+Date: Mon, 03 Sep 2018 11:40:44 GMT
+
+hi
+
+➜  ~ http http://localhost:8080/haha/
+HTTP/1.1 200 OK
+Content-Length: 5
+Content-Type: text/plain; charset=utf-8
+Date: Mon, 03 Sep 2018 11:40:53 GMT
+
+haha
+</code></pre>
+
+<h4 id="分析go-restful官方例子userresource">分析go-restful官方例子UserResource</h4>
+
+<pre><code class="language-go">package main
+
+import (
+	&quot;log&quot;
+	&quot;net/http&quot;
+
+	&quot;github.com/emicklei/go-restful&quot;
+	restfulspec &quot;github.com/emicklei/go-restful-openapi&quot;
+	&quot;github.com/go-openapi/spec&quot;
+)
+
+// UserResource is the REST layer to the User domain
+type UserResource struct {
+	// normally one would use DAO (data access object)
+	users map[string]User
+}
+
+// 实现WebService来处理路由
+func (u UserResource) WebService() *restful.WebService {
+	ws := new(restful.WebService)
+	ws.
+		Path(&quot;/users&quot;).
+		Consumes(restful.MIME_XML, restful.MIME_JSON).
+		Produces(restful.MIME_JSON, restful.MIME_XML) // 路径，请求类型，返回类型
+
+	tags := []string{&quot;users&quot;}
+
+	ws.Route(ws.GET(&quot;/&quot;).To(u.findAllUsers).
+		// 添加文档
+		Doc(&quot;get all users&quot;).// 接口说明
+		Metadata(restfulspec.KeyOpenAPITags, tags).// 元数据
+		Writes([]User{}). // 返回啥
+		Returns(200, &quot;OK&quot;, []User{})) // 状态码说明
+
+	ws.Route(ws.GET(&quot;/{user-id}&quot;).To(u.findUser).
+		// docs
+		Doc(&quot;get a user&quot;).
+		Param(ws.PathParameter(&quot;user-id&quot;, &quot;identifier of the user&quot;).DataType(&quot;integer&quot;).DefaultValue(&quot;1&quot;)). //添加url参数
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Writes(User{}). // on the response
+		Returns(200, &quot;OK&quot;, User{}).
+		Returns(404, &quot;Not Found&quot;, nil))
+
+	ws.Route(ws.PUT(&quot;/{user-id}&quot;).To(u.updateUser).
+		// docs
+		Doc(&quot;update a user&quot;).
+		Param(ws.PathParameter(&quot;user-id&quot;, &quot;identifier of the user&quot;).DataType(&quot;string&quot;)).
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Reads(User{})) // 接收body
+
+	ws.Route(ws.PUT(&quot;&quot;).To(u.createUser).
+		// docs
+		Doc(&quot;create a user&quot;).
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Reads(User{})) // from the request
+
+	ws.Route(ws.DELETE(&quot;/{user-id}&quot;).To(u.removeUser).
+		// docs
+		Doc(&quot;delete a user&quot;).
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Param(ws.PathParameter(&quot;user-id&quot;, &quot;identifier of the user&quot;).DataType(&quot;string&quot;)))
+
+	return ws
+}
+
+// GET http://localhost:8080/users
+//
+func (u UserResource) findAllUsers(request *restful.Request, response *restful.Response) {
+	list := []User{}
+	for _, each := range u.users {
+		list = append(list, each)
+	}
+	response.WriteEntity(list)
+}
+
+// GET http://localhost:8080/users/1
+//
+func (u UserResource) findUser(request *restful.Request, response *restful.Response) {
+	id := request.PathParameter(&quot;user-id&quot;)
+	usr := u.users[id]
+	if len(usr.ID) == 0 {
+		response.WriteErrorString(http.StatusNotFound, &quot;User could not be found.&quot;)
+	} else {
+		response.WriteEntity(usr)
+	}
+}
+
+// PUT http://localhost:8080/users/1
+// &lt;User&gt;&lt;Id&gt;1&lt;/Id&gt;&lt;Name&gt;Melissa Raspberry&lt;/Name&gt;&lt;/User&gt;
+//
+func (u *UserResource) updateUser(request *restful.Request, response *restful.Response) {
+	usr := new(User)
+	err := request.ReadEntity(&amp;usr)
+	if err == nil {
+		u.users[usr.ID] = *usr
+		response.WriteEntity(usr)
+	} else {
+		response.WriteError(http.StatusInternalServerError, err)
+	}
+}
+
+// PUT http://localhost:8080/users/1
+// &lt;User&gt;&lt;Id&gt;1&lt;/Id&gt;&lt;Name&gt;Melissa&lt;/Name&gt;&lt;/User&gt;
+//
+func (u *UserResource) createUser(request *restful.Request, response *restful.Response) {
+	usr := User{ID: request.PathParameter(&quot;user-id&quot;)}
+	err := request.ReadEntity(&amp;usr)
+	if err == nil {
+		u.users[usr.ID] = usr
+		response.WriteHeaderAndEntity(http.StatusCreated, usr)
+	} else {
+		response.WriteError(http.StatusInternalServerError, err)
+	}
+}
+
+// DELETE http://localhost:8080/users/1
+//
+func (u *UserResource) removeUser(request *restful.Request, response *restful.Response) {
+	id := request.PathParameter(&quot;user-id&quot;)
+	delete(u.users, id)
+}
+
+func main() {
+	u := UserResource{map[string]User{}}
+	restful.DefaultContainer.Add(u.WebService()) //默认容器添加userservice
+
+	config := restfulspec.Config{
+		WebServices: restful.RegisteredWebServices(),
+		APIPath:     &quot;/apidocs.json&quot;,
+		PostBuildSwaggerObjectHandler: enrichSwaggerObject}
+		
+	restful.DefaultContainer.Add(restfulspec.NewOpenAPIService(config)) //默认容器添加swaggerservice
+
+	// npm i swagger-ui-dist，安装swaggper的静态资源，然后将路径配置到下面
+	// 使用http://localhost:8080/apidocs/?url=http://localhost:8080/apidocs.json可以打开
+	http.Handle(&quot;/apidocs/&quot;, http.StripPrefix(&quot;/apidocs/&quot;, http.FileServer(http.Dir(&quot;/Users/ermazi/go/ermazi.com/gaga/node_modules/swagger-ui-dist&quot;))))
+
+	log.Printf(&quot;start listening on localhost:8080&quot;)
+	log.Fatal(http.ListenAndServe(&quot;:8080&quot;, nil))
+}
+
+// 配置swagger额外信息
+func enrichSwaggerObject(swo *spec.Swagger) {
+	swo.Info = &amp;spec.Info{
+		InfoProps: spec.InfoProps{
+			Title:       &quot;UserService&quot;,
+			Description: &quot;Resource for managing Users&quot;,
+			Contact: &amp;spec.ContactInfo{
+				Name:  &quot;john&quot;,
+				Email: &quot;john@doe.rp&quot;,
+				URL:   &quot;http://johndoe.org&quot;,
+			},
+			License: &amp;spec.License{
+				Name: &quot;MIT&quot;,
+				URL:  &quot;http://mit.org&quot;,
+			},
+			Version: &quot;1.0.0&quot;,
+		},
+	}
+	swo.Tags = []spec.Tag{spec.Tag{TagProps: spec.TagProps{
+		Name:        &quot;users&quot;,
+		Description: &quot;Managing users&quot;}}}
+}
+
+// 用户结构体
+type User struct {
+	ID   string `json:&quot;id&quot; description:&quot;identifier of the user&quot;`
+	Name string `json:&quot;name&quot; description:&quot;name of the user&quot; default:&quot;john&quot;`
+	Age  int    `json:&quot;age&quot; description:&quot;age of the user&quot; default:&quot;21&quot;`
+}
+</code></pre>
+
+<p>该例子使用user的增删改查为例，简单地讲了下<code>go-restful</code>的基本使用，创建ws，创建容器，定义ws明细，定义接口文档，容器添加ws，容器添加swagger，启动http服务器。</p>
+
+<h4 id="分析官方例子自定义日志格式">分析官方例子自定义日志格式</h4>
+
+<p><a href="https://en.wikipedia.org/wiki/Common_Log_Format">NCSA格式</a></p>
+
+<pre><code>127.0.0.1 user-identifier frank [10/Oct/2000:13:55:36 -0700] &quot;GET /apache_pb.gif HTTP/1.0&quot; 200 2326
+</code></pre>
+
+<pre><code class="language-go">...
+func NCSACommonLogFormatLogger() restful.FilterFunction {
+	return func(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
+		var username = &quot;-&quot;
+		if req.Request.URL.User != nil {
+			if name := req.Request.URL.User.Username(); name != &quot;&quot; {
+				username = name
+			}
+		}
+		chain.ProcessFilter(req, resp)
+		logger.Printf(&quot;%s - %s [%s] \&quot;%s %s %s\&quot; %d %d&quot;,
+			strings.Split(req.Request.RemoteAddr, &quot;:&quot;)[0],
+			username,
+			time.Now().Format(&quot;02/Jan/2006:15:04:05 -0700&quot;),
+			req.Request.Method,
+			req.Request.URL.RequestURI(),
+			req.Request.Proto,
+			resp.StatusCode(),
+			resp.ContentLength(),
+		)
+	}
+}
+...
+</code></pre>
+
+<p>使用<code>filter</code>输出日志</p>
+
+<p>更多具体见：<a href="https://github.com/emicklei/go-restful">go-restful</a></p>
+
+    </div>
+
+    
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">ermazi</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2018-09-03</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/go/">go</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/play-with-ozzo-dbx/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">玩转ozzo全家桶</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/use-openvpn-connect-local-and-kubernetes-for-app-debugging/">
+            <span class="next-text nav-default">使用openvpn搭建kubernetes本地调试桥梁</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:troy.sdu@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/ermazi/" class="iconfont icon-github" title="github"></a>
+  <a href="https://www.ermazi.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://www.ermazi.com">ermazi</a> 强力驱动
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2018 - 
+    1018
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">ermazi</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+<script type="text/javascript" src="/dist/even.min.js?v=3.2.0"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>k8s网络初窥 - 二麻子 - 够用运维合伙创始人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="ermazi" />
+  <meta name="description" content="神奇的kubernetes，网络也是它的魅力之一，它拥有一个真实存在的Pod子网，它还抽象出一个虚拟存在的服务子网。 当你访问任何一个节点的N" />
+
+  <meta name="keywords" content="ermazi, 够用运维, 二麻子, linux" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.47.1" />
+
+
+<link rel="canonical" href="https://www.ermazi.com/post/k8s-network/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+<link href="/dist/even.min.css?v=3.2.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="k8s网络初窥" />
+<meta property="og:description" content="神奇的kubernetes，网络也是它的魅力之一，它拥有一个真实存在的Pod子网，它还抽象出一个虚拟存在的服务子网。 当你访问任何一个节点的N" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.ermazi.com/post/k8s-network/" />
+<meta itemprop="name" content="k8s网络初窥">
+<meta itemprop="description" content="神奇的kubernetes，网络也是它的魅力之一，它拥有一个真实存在的Pod子网，它还抽象出一个虚拟存在的服务子网。 当你访问任何一个节点的N">
+
+
+
+<meta itemprop="wordCount" content="1248">
+
+
+
+<meta itemprop="keywords" content="kubernetes," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="k8s网络初窥"/>
+<meta name="twitter:description" content="神奇的kubernetes，网络也是它的魅力之一，它拥有一个真实存在的Pod子网，它还抽象出一个虚拟存在的服务子网。 当你访问任何一个节点的N"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">二麻子</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/essay/">
+        <li class="mobile-menu-item">随笔</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">目录</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">二麻子</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/essay/">随笔</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">目录</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">k8s网络初窥</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 0001-01-01 </span>
+        
+        <span class="more-meta"> 约 1248 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-kubernetes集群内部访问-clusterip">1. kubernetes集群内部访问<code>ClusterIP</code></a></li>
+<li><a href="#2-nodeport访问">2. nodeport访问</a></li>
+</ul></li>
+<li><a href="#瞅下service的负载均衡">瞅下service的负载均衡</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    
+
+    
+    <div class="post-content">
+      
+
+<blockquote>
+<p>神奇的kubernetes，网络也是它的魅力之一，它拥有一个真实存在的<code>Pod子网</code>，它还抽象出一个虚拟存在的<code>服务子网</code>。</p>
+
+<p>当你访问任何一个节点的<code>NodePort</code>，它能将你的流量<code>路由</code>到对应的<code>Pod</code>中；当你在任何一个它的节点机器，通过<code>ClusterIP</code>访问服务畅通无阻，通过<code>PodIP</code>直接访问任何一个Pod也是无拘无束。</p>
+
+<p>它是如何做到的呢？</p>
+</blockquote>
+
+<p>小二，上图：</p>
+
+<p><img src="https://wekube.com/imgs/20180906030836.png" alt="k8s模块架构图" /></p>
+
+<p><a href="https://zhuanlan.zhihu.com/p/28289080">mark</a>，实验后完成k8s网络章节</p>
+
+<p><a href="http://www.lijiaocn.com/%E9%A1%B9%E7%9B%AE/2017/04/11/calico-usage.html">mark</a>，calico网络</p>
+
+<p>k8s网络访问分为这几个场景：</p>
+
+<ol>
+<li>kubernetes集群内部访问<code>ClusterIP</code></li>
+<li>kubernetes节点访问<code>ClusterIP</code></li>
+<li>kubernetes集群外部访问<code>NodePort</code></li>
+</ol>
+
+<h3 id="1-kubernetes集群内部访问-clusterip">1. kubernetes集群内部访问<code>ClusterIP</code></h3>
+
+<p>这里以<code>urlechoserver</code>服务为例，它的<code>ClusterIP</code>是<code>10.222.39.172</code>，<code>PodIP</code>是<code>10.233.174.168</code></p>
+
+<p>pod的ip为<code>10.233.146.8</code>，目标ip为<code>10.222.39.172</code>和<code>10.233.146.39</code>（为了演示负载均衡）</p>
+
+<p>如果是集群外部访问<code>10.222.39.172</code>的80，跳到<code>KUBE-MARK-MASQ</code></p>
+
+<pre><code>-A KUBE-SERVICES ! -s 10.233.0.0/16 -d 10.222.39.172/32 -p tcp -m comment --comment &quot;default/urlechoserver: cluster IP&quot; -m tcp --dport 80 -j KUBE-MARK-MASQ
+</code></pre>
+
+<p>进行DNAT，直接访问<code>10.233.174.168:8080</code>以及<code>10.233.146.39:8080</code></p>
+
+<pre><code>-A KUBE-SEP-MCSNIMMQULJNI4G5 -p tcp -m comment --comment &quot;default/urlechoserver:&quot; -m tcp -j DNAT --to-destination 10.233.174.168:8080
+-A KUBE-SEP-AYCO7YALOFXOX2EA -p tcp -m comment --comment &quot;default/urlechoserver:&quot; -m tcp -j DNAT --to-destination 10.233.146.39:8080
+</code></pre>
+
+<p>如果是访问服务<code>10.222.39.172</code>的80端口，跳到<code>KUBE-SVC-32BLMK6IF62XH6WW</code></p>
+
+<pre><code>-A KUBE-SERVICES -d 10.222.39.172/32 -p tcp -m comment --comment &quot;default/urlechoserver: cluster IP&quot; -m tcp --dport 80 -j KUBE-SVC-32BLMK6IF62XH6WW
+</code></pre>
+
+<p>带概率50%，跳到<code>KUBE-SEP-AYCO7YALOFXOX2EA</code></p>
+
+<pre><code>-A KUBE-SVC-32BLMK6IF62XH6WW -m comment --comment &quot;default/urlechoserver:&quot; -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-AYCO7YALOFXOX2EA
+</code></pre>
+
+<p>直接跳到<code>KUBE-SEP-MCSNIMMQULJNI4G5</code></p>
+
+<pre><code>-A KUBE-SVC-32BLMK6IF62XH6WW -m comment --comment &quot;default/urlechoserver:&quot; -j KUBE-SEP-MCSNIMMQULJNI4G5
+</code></pre>
+
+<p>如果是<code>urlechoserver</code>所在pod访问<code>urlechoserver</code>，跳到<code>KUBE-MARK-MASQ</code></p>
+
+<pre><code>-A KUBE-SEP-MCSNIMMQULJNI4G5 -s 10.233.174.168/32 -m comment --comment &quot;default/urlechoserver:&quot; -j KUBE-MARK-MASQ
+-A KUBE-SEP-AYCO7YALOFXOX2EA -s 10.233.146.39/32 -m comment --comment &quot;default/urlechoserver:&quot; -j KUBE-MARK-MASQ
+</code></pre>
+
+<p><code>KUBE-MARK-MASQ</code>就是为了打个标签</p>
+
+<pre><code>-A KUBE-MARK-MASQ -j MARK --set-xmark 0x4000/0x4000
+</code></pre>
+
+<p>再来看看带标签规则<code>0x4000/0x4000</code>的处理：
+凡是带<code>0x4000/0x4000</code>的都允许转发</p>
+
+<pre><code>-A KUBE-FORWARD -m comment --comment &quot;kubernetes forwarding rules&quot; -m mark --mark 0x4000/0x4000 -j ACCEPT
+</code></pre>
+
+<p>凡是带<code>0x4000/0x4000</code>，使用地址伪装(SNAT)</p>
+
+<pre><code>-A KUBE-POSTROUTING -m comment --comment &quot;kubernetes service traffic requiring SNAT&quot; -m mark --mark 0x4000/0x4000 -j MASQUERADE
+</code></pre>
+
+<h3 id="2-nodeport访问">2. nodeport访问</h3>
+
+<pre><code>-A KUBE-SERVICES -m comment --comment &quot;kubernetes service nodeports; NOTE: this must be the last rule in this chain&quot; -m addrtype --dst-type LOCAL -j KUBE-NODEPORTS
+</code></pre>
+
+<h2 id="瞅下service的负载均衡">瞅下service的负载均衡</h2>
+
+<p>还是以<code>urlechoserver</code>为例，其中DNAT步骤，也就是<code>KUBE-SVC-XXX</code>链</p>
+
+<pre><code>:KUBE-SVC-32BLMK6IF62XH6WW - [0:0]
+-A KUBE-SVC-32BLMK6IF62XH6WW -m comment --comment &quot;default/urlechoserver:&quot; -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-AYCO7YALOFXOX2EA
+-A KUBE-SVC-32BLMK6IF62XH6WW -m comment --comment &quot;default/urlechoserver:&quot; -j KUBE-SEP-MCSNIMMQULJNI4G5
+</code></pre>
+
+<p>iptable从上往下匹配，也就是去<code>KUBE-SEP-AYCO7YALOFXOX2EA</code>有50%的概率；自然去<code>KUBE-SEP-MCSNIMMQULJNI4G5</code>的概率也就是50%，那如果再加一个后端节点呢？</p>
+
+<pre><code>kubectl scale deployment urlechoserver --replicas 3
+</code></pre>
+
+<p>规则变为：</p>
+
+<pre><code>-A KUBE-SVC-32BLMK6IF62XH6WW -m comment --comment &quot;default/urlechoserver:&quot; -m statistic --mode random --probability 0.33332999982 -j KUBE-SEP-AYCO7YALOFXOX2EA
+-A KUBE-SVC-32BLMK6IF62XH6WW -m comment --comment &quot;default/urlechoserver:&quot; -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-O6L45SEFQF4QVOHA
+-A KUBE-SVC-32BLMK6IF62XH6WW -m comment --comment &quot;default/urlechoserver:&quot; -j KUBE-SEP-MCSNIMMQULJNI4G5
+</code></pre>
+
+<p>从上而下的概率依次是：</p>
+
+<ul>
+<li><code>KUBE-SEP-AYCO7YALOFXOX2EA</code>:33%</li>
+<li><code>KUBE-SEP-O6L45SEFQF4QVOHA</code>:(1-<sup>1</sup>&frasl;<sub>3</sub> )* (<sup>1</sup>&frasl;<sub>2</sub>) =33%</li>
+<li><code>KUBE-SEP-MCSNIMMQULJNI4G5</code>:1-<sup>1</sup>&frasl;<sub>3</sub> -<sup>1</sup>&frasl;<sub>3</sub>=33%</li>
+</ul>
+
+<p>都是<code>1/3</code>，也就实现了负载均衡。</p>
+
+    </div>
+
+    
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">ermazi</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">0001-01-01</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/kubernetes/">kubernetes</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/how-to-research-k8s-log-component/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">如何调研k8s日志组件</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:troy.sdu@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/ermazi/" class="iconfont icon-github" title="github"></a>
+  <a href="https://www.ermazi.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://www.ermazi.com">ermazi</a> 强力驱动
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2018 - 
+    1018
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">ermazi</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+
+
+<script type="text/javascript" src="/dist/even.min.js?v=3.2.0"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
