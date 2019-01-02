@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Go on 二麻子 - 够用运维合伙创始人</title>
-    <link>https://www.ermazi.com/tags/go/</link>
-    <description>Recent content in Go on 二麻子 - 够用运维合伙创始人</description>
+    <title>Go on k8s学派</title>
+    <link>https://www.k8sedu.com/tags/go/</link>
+    <description>Recent content in Go on k8s学派</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Tue, 04 Sep 2018 23:10:29 +0800</lastBuildDate>
     
-	<atom:link href="https://www.ermazi.com/tags/go/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://www.k8sedu.com/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>玩转ozzo全家桶</title>
-      <link>https://www.ermazi.com/post/play-with-ozzo-dbx/</link>
+      <link>https://www.k8sedu.com/post/play-with-ozzo-dbx/</link>
       <pubDate>Tue, 04 Sep 2018 23:10:29 +0800</pubDate>
       
-      <guid>https://www.ermazi.com/post/play-with-ozzo-dbx/</guid>
+      <guid>https://www.k8sedu.com/post/play-with-ozzo-dbx/</guid>
       <description>Q: 使用MySQL遇到Internal server error: sql: Scan error on column index 6: unsupported Scan, storing driver.Value type []uint8 into type *time.Time的问题 A：查看issue,DSN添加参数parse</description>
     </item>
     
     <item>
       <title>一步步入坑go-restful</title>
-      <link>https://www.ermazi.com/post/web-from-zero-to-one/</link>
+      <link>https://www.k8sedu.com/post/web-from-zero-to-one/</link>
       <pubDate>Mon, 03 Sep 2018 18:22:59 +0800</pubDate>
       
-      <guid>https://www.ermazi.com/post/web-from-zero-to-one/</guid>
+      <guid>https://www.k8sedu.com/post/web-from-zero-to-one/</guid>
       <description>一步步了解go的http封装 go语言本身http库已经可以很方便的完成很多web需求，如果只是简单的几个接口，几乎不怎么需要额外的框架；当项</description>
     </item>
     

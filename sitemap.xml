@@ -1,178 +1,171 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<?xml-stylesheet type="text/xsl" href="https://www.ermazi.com/sitemap.xsl"?>
+<?xml-stylesheet type="text/xsl" href="https://www.k8sedu.com/sitemap.xsl"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://www.ermazi.com/post/k8s-coredns/</loc>
+    <loc>https://www.k8sedu.com/post/k8s-coredns/</loc>
     <lastmod>2018-09-29T08:10:29+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/post/k8slab-howto-create-standalone-cluster/</loc>
+    <loc>https://www.k8sedu.com/post/k8slab-howto-create-standalone-cluster/</loc>
     <lastmod>2018-09-28T00:00:38+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/post/ali-bp-slb-s01/</loc>
+    <loc>https://www.k8sedu.com/post/ali-bp-slb-s01/</loc>
     <lastmod>2018-09-27T13:28:57+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/post/proxy-adsl-check-strategy/</loc>
+    <loc>https://www.k8sedu.com/post/proxy-adsl-check-strategy/</loc>
     <lastmod>2018-09-14T02:13:08+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/post/affinity-and-anti-affinity-vs-nodeselector/</loc>
+    <loc>https://www.k8sedu.com/post/affinity-and-anti-affinity-vs-nodeselector/</loc>
     <lastmod>2018-09-10T23:10:29+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/post/learn-iptables-from-zero/</loc>
+    <loc>https://www.k8sedu.com/post/learn-iptables-from-zero/</loc>
     <lastmod>2018-09-06T01:19:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/essay/fall-from-my-bicycle/</loc>
-    <lastmod>2018-09-06T00:56:14+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.ermazi.com/post/play-with-ozzo-dbx/</loc>
+    <loc>https://www.k8sedu.com/post/play-with-ozzo-dbx/</loc>
     <lastmod>2018-09-04T23:10:29+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/post/web-from-zero-to-one/</loc>
+    <loc>https://www.k8sedu.com/post/web-from-zero-to-one/</loc>
     <lastmod>2018-09-03T18:22:59+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/post/use-openvpn-connect-local-and-kubernetes-for-app-debugging/</loc>
+    <loc>https://www.k8sedu.com/post/use-openvpn-connect-local-and-kubernetes-for-app-debugging/</loc>
     <lastmod>2018-09-03T17:34:11+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/post/how-to-build-local-develop-env-via-telepresence/</loc>
+    <loc>https://www.k8sedu.com/post/how-to-build-local-develop-env-via-telepresence/</loc>
     <lastmod>2018-08-31T14:48:55+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/post/how-to-research-k8s-log-component/</loc>
+    <loc>https://www.k8sedu.com/post/how-to-research-k8s-log-component/</loc>
     <lastmod>2018-08-30T23:10:29+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/tags/aliyun/</loc>
+    <loc>https://www.k8sedu.com/tags/aliyun/</loc>
     <lastmod>2018-09-27T13:28:57+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/categories/</loc>
+    <loc>https://www.k8sedu.com/categories/</loc>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/essay/</loc>
-    <lastmod>2018-09-06T00:56:14+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.ermazi.com/tags/go/</loc>
+    <loc>https://www.k8sedu.com/tags/go/</loc>
     <lastmod>2018-09-04T23:10:29+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/tags/k8slab/</loc>
+    <loc>https://www.k8sedu.com/tags/k8slab/</loc>
     <lastmod>2018-09-28T00:00:38+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/tags/kubernetes/</loc>
+    <loc>https://www.k8sedu.com/tags/kubernetes/</loc>
     <lastmod>2018-09-29T08:10:29+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/tags/linux/</loc>
+    <loc>https://www.k8sedu.com/categories/kuberntes/</loc>
     <lastmod>2018-09-28T00:00:38+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/tags/openvpn/</loc>
+    <loc>https://www.k8sedu.com/tags/linux/</loc>
+    <lastmod>2018-09-28T00:00:38+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.k8sedu.com/categories/linux/</loc>
+    <lastmod>2018-09-28T00:00:38+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.k8sedu.com/tags/openvpn/</loc>
     <lastmod>2018-09-03T17:34:11+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/post/</loc>
+    <loc>https://www.k8sedu.com/post/</loc>
     <lastmod>2018-09-29T08:10:29+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/tags/</loc>
+    <loc>https://www.k8sedu.com/tags/</loc>
     <lastmod>2018-09-27T13:28:57+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/post/k8s-network/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.ermazi.com/</loc>
+    <loc>https://www.k8sedu.com/</loc>
     <lastmod>2018-09-29T08:10:29+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://www.ermazi.com/tags/%E9%9A%8F%E7%AC%94/</loc>
-    <lastmod>2018-09-06T00:56:14+08:00</lastmod>
+    <loc>https://www.k8sedu.com/post/k8s-network/</loc>
     <changefreq>weekly</changefreq>
-    <priority>0</priority>
+    <priority>0.5</priority>
   </url>
   
 </urlset>

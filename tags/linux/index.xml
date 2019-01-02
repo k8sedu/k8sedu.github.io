@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Linux on 二麻子 - 够用运维合伙创始人</title>
-    <link>https://www.ermazi.com/tags/linux/</link>
-    <description>Recent content in Linux on 二麻子 - 够用运维合伙创始人</description>
+    <title>Linux on k8s学派</title>
+    <link>https://www.k8sedu.com/tags/linux/</link>
+    <description>Recent content in Linux on k8s学派</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Fri, 28 Sep 2018 00:00:38 +0800</lastBuildDate>
     
-	<atom:link href="https://www.ermazi.com/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://www.k8sedu.com/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>k8s系列——如何创建单节点集群</title>
-      <link>https://www.ermazi.com/post/k8slab-howto-create-standalone-cluster/</link>
+      <link>https://www.k8sedu.com/post/k8slab-howto-create-standalone-cluster/</link>
       <pubDate>Fri, 28 Sep 2018 00:00:38 +0800</pubDate>
       
-      <guid>https://www.ermazi.com/post/k8slab-howto-create-standalone-cluster/</guid>
+      <guid>https://www.k8sedu.com/post/k8slab-howto-create-standalone-cluster/</guid>
       <description>sometimes，我们只是想测试一下k8s的功能，进行流程验证，minikube与真实k8s集群还是有一定区别的，这时候我们可以使用快速起</description>
     </item>
     
     <item>
       <title>阿里云之负载均衡SLB</title>
-      <link>https://www.ermazi.com/post/ali-bp-slb-s01/</link>
+      <link>https://www.k8sedu.com/post/ali-bp-slb-s01/</link>
       <pubDate>Thu, 27 Sep 2018 13:28:57 +0800</pubDate>
       
-      <guid>https://www.ermazi.com/post/ali-bp-slb-s01/</guid>
+      <guid>https://www.k8sedu.com/post/ali-bp-slb-s01/</guid>
       <description>阿里云SLB支持四层以及七层负载均衡，其中四层使用LVS实现，七层使用Tengine实现， 所以谈SLB也会四层和七层分开吹。 惯例，上全局图：</description>
     </item>
     
     <item>
       <title>代理池adsl节点检测策略</title>
-      <link>https://www.ermazi.com/post/proxy-adsl-check-strategy/</link>
+      <link>https://www.k8sedu.com/post/proxy-adsl-check-strategy/</link>
       <pubDate>Fri, 14 Sep 2018 02:13:08 +0800</pubDate>
       
-      <guid>https://www.ermazi.com/post/proxy-adsl-check-strategy/</guid>
+      <guid>https://www.k8sedu.com/post/proxy-adsl-check-strategy/</guid>
       <description>爬虫必备代理池，是有一大堆adsl机器组成，对于这些机器的维护，自然也就成为工作中重要的一环 adsl节点特点 ssh访问端点固定 adsl拨号 资</description>
     </item>
     
     <item>
       <title>重拾linux的iptables知识</title>
-      <link>https://www.ermazi.com/post/learn-iptables-from-zero/</link>
+      <link>https://www.k8sedu.com/post/learn-iptables-from-zero/</link>
       <pubDate>Thu, 06 Sep 2018 01:19:23 +0800</pubDate>
       
-      <guid>https://www.ermazi.com/post/learn-iptables-from-zero/</guid>
+      <guid>https://www.k8sedu.com/post/learn-iptables-from-zero/</guid>
       <description>日常的运维工作中，不需要太高深的网络知识，久而久之，曾经的饭碗已经遗弃，排查一些网络关联的问题，变得很被动。 TCP/IP基础 二层走MAC，三</description>
     </item>
     

@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Openvpn on 二麻子 - 够用运维合伙创始人</title>
-    <link>https://www.ermazi.com/tags/openvpn/</link>
-    <description>Recent content in Openvpn on 二麻子 - 够用运维合伙创始人</description>
+    <title>Openvpn on k8s学派</title>
+    <link>https://www.k8sedu.com/tags/openvpn/</link>
+    <description>Recent content in Openvpn on k8s学派</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Mon, 03 Sep 2018 17:34:11 +0800</lastBuildDate>
     
-	<atom:link href="https://www.ermazi.com/tags/openvpn/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://www.k8sedu.com/tags/openvpn/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>使用openvpn搭建kubernetes本地调试桥梁</title>
-      <link>https://www.ermazi.com/post/use-openvpn-connect-local-and-kubernetes-for-app-debugging/</link>
+      <link>https://www.k8sedu.com/post/use-openvpn-connect-local-and-kubernetes-for-app-debugging/</link>
       <pubDate>Mon, 03 Sep 2018 17:34:11 +0800</pubDate>
       
-      <guid>https://www.ermazi.com/post/use-openvpn-connect-local-and-kubernetes-for-app-debugging/</guid>
+      <guid>https://www.k8sedu.com/post/use-openvpn-connect-local-and-kubernetes-for-app-debugging/</guid>
       <description>来自于kubernetes的外部调试需求，对于微服务架构，本地程序的调试强依赖于注册中心以及直连生产者消费者，之前考虑使用teleprese</description>
     </item>
     

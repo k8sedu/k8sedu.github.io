@@ -1,2 +1,2 @@
 User-agent: *
-Sitemap: https://www.ermazi.com/sitemap.xml
+Sitemap: https://www.k8sedu.com/sitemap.xml
