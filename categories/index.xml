@@ -6,9 +6,46 @@
     <description>Recent content in Categories on k8s学派</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
+    <lastBuildDate>Thu, 03 Jan 2019 02:39:24 +0800</lastBuildDate>
     
 	<atom:link href="https://www.k8sedu.com/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Argo</title>
+      <link>https://www.k8sedu.com/categories/argo/</link>
+      <pubDate>Thu, 03 Jan 2019 02:39:24 +0800</pubDate>
+      
+      <guid>https://www.k8sedu.com/categories/argo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Cicd</title>
+      <link>https://www.k8sedu.com/categories/cicd/</link>
+      <pubDate>Thu, 03 Jan 2019 02:39:24 +0800</pubDate>
+      
+      <guid>https://www.k8sedu.com/categories/cicd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>K8s</title>
+      <link>https://www.k8sedu.com/categories/k8s/</link>
+      <pubDate>Thu, 03 Jan 2019 02:39:24 +0800</pubDate>
+      
+      <guid>https://www.k8sedu.com/categories/k8s/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kubernetes</title>
+      <link>https://www.k8sedu.com/categories/kubernetes/</link>
+      <pubDate>Thu, 03 Jan 2019 02:39:24 +0800</pubDate>
+      
+      <guid>https://www.k8sedu.com/categories/kubernetes/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Kuberntes</title>
